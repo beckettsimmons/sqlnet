@@ -69,3 +69,7 @@ class Connection(object):
         """ Roll back the transaction. """
         self.transaction.Rollback()
 
+        # Create new transaction because each transaction can
+        # only be used once.
+        self.transaction = self.connection.BeginTransaction()
+
