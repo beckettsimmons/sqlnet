@@ -15,7 +15,17 @@ apilevel = "2.0"
 paramstyle = "format"
 
 def connect(*args, **kwargs):
-    """ Create a connection object """
+    """ Constructor for creating a database connection class.
+
+    Keyword Args:
+        host (str): name of host to connect to.
+        db (str): name of database to connect to.
+        trusted_connection (str): Wether or not to used Windows
+            Authentication. Either "yes" or "no".
+
+    Returns:
+        Connection: Python DB-API compliant database connection class.
+    """
 
     return Connection(*args, **kwargs)
 
