@@ -1,8 +1,9 @@
 import clr
 
 clr.AddReference('System.Data')
-
 from System.Data.SqlClient import SqlCommand
+
+from result import Result
 
 class Cursor(object):
     """ sqlnet database cursor class.
@@ -15,6 +16,7 @@ class Cursor(object):
         """ Initialise, just save connection """
         self.connection = connection
         self.transaction = transaction
+        self.result = None
 
 
     def execute(self, sql):
@@ -28,15 +30,16 @@ class Cursor(object):
         """
         self.command = SqlCommand(sql, self.connection, self.transaction)
         self.go()
+        self.result = Result(self)
 
         return self
 
+    def fetchone(self):
+        return self.result.fetchone()
+
     def __iter__(self):
         """ Yield next value in the command result. """
-        reader = self.command.ExecuteReader()
-        while reader.Read():
-            yield [reader.GetValue(ii) for ii in xrange(reader.FieldCount)]
-        reader.Close()
+        yield self.fetchone()
 
     def go(self):
         """ Actually execute/commit cursor command on database. """
