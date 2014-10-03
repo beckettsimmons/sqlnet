@@ -6,7 +6,7 @@ from System.Data.SqlClient import SqlConnection
 from cursor import Cursor
 
 class Connection(object):
-    """ The sqlnet Database Conection Object. """
+    """ The sqlnet database conection class. """
 
     from sqlnet_exceptions import Warning, Error, InterfaceError,\
         DataError, DatabaseError, OperationalError, IntegrityError,\
@@ -21,11 +21,18 @@ class Connection(object):
         self.transaction = self.connection.BeginTransaction()
 
     def cursor(self):
-        """ Create a cursor """
+        """ Create and return a new cursor.
+
+        Returns:
+            Cursor: DB-API compliant cursor class.
+        """
         return Cursor(self.connection, self.transaction)
     
     def create_connection(*args, **kwargs):
-        """ Create a database connection based on arguments. """
+        """ Create a database connection based on arguments.
+
+        Arguments further documented in sqlnet.connect() method.
+        """
         connection_string = ""
 
         # Parse host param
@@ -33,13 +40,14 @@ class Connection(object):
         if host != None:
             connection_string += "Server={host};".format(host=host)
 
-        # Parse database params.
+        # Parse database param.
         database = kwargs.get('db', None)
         if database != None:
             connection_string += "Database={database};".format(
                 database=database
             )
 
+        # Parse trusted_connection param.
         trusted_connection = kwargs.get('trusted_connection', False)
         connection_string +=\
             "Trusted_Connection={trusted_connection};".format(
@@ -53,11 +61,11 @@ class Connection(object):
         pass
 
     def close(self):
-        """ Closes self.connection. """
+        """ Closes self.connection and renders it unusable. """
         self.connection.Close()
 
     def commit(self):
-        """ Commit all Cursors to database. """
+        """ Commit current transaction to database and begin new one. """
         # Commit the current transaction on the connection.
         self.transaction.Commit()
 
@@ -66,7 +74,7 @@ class Connection(object):
         self.transaction = self.connection.BeginTransaction()
 
     def rollback(self):
-        """ Roll back the transaction. """
+        """ Roll back the current transaction. """
         self.transaction.Rollback()
 
         # Create new transaction because each transaction can
