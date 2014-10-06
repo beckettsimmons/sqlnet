@@ -107,8 +107,12 @@ class DatabaseAPI20Test(unittest.TestCase):
 
     ddl1 = 'create table %sbooze (name varchar(20))' % table_prefix
     ddl2 = 'create table %sbarflys (name varchar(20))' % table_prefix
-    xddl1 = 'drop table %sbooze' % table_prefix
-    xddl2 = 'drop table %sbarflys' % table_prefix
+    xddl1 = (
+        "if object_id ('dbo.{pre}booze', 'U') is not null"
+        "    drop table {pre}booze").format(pre=table_prefix)
+    xddl2 = (
+        "if object_id ('dbo.{pre}barflys', 'U') is not null"
+        "    drop table {pre}barflys").format(pre=table_prefix)
 
     lowerfunc = 'lower' # Name of stored procedure to convert string->lowercase
         

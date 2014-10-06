@@ -1,5 +1,5 @@
 class Result():
-    """ A result object created by Crusor query execution. """
+    """ A result object created by Cursor query execution. """
 
     def __init__(self, cursor):
         self.cursor = cursor
@@ -33,3 +33,17 @@ class Result():
 
         self.row_index += 1
         return self.rows[self.row_index]
+
+    def fetchmany(self, size):
+        rows = []
+        for i in range(size):
+            row = self.fetchone()
+            if row == None:
+                break
+            rows.append(row)
+
+        tuple(rows)
+        return rows
+
+    def fetchall(self):
+        return self.fetchmany(len(self.rows))

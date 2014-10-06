@@ -20,13 +20,17 @@ class Connection(object):
         # Immediately create a new transaction.
         self.transaction = self.connection.BeginTransaction()
 
+        # Turn off auto-commit.
+        cursor = self.cursor()
+        cursor.execute('SET IMPLICIT_TRANSACTIONS ON;')
+
     def cursor(self):
         """ Create and return a new cursor.
 
         Returns:
             Cursor: DB-API compliant cursor class.
         """
-        return Cursor(self.connection, self.transaction)
+        return Cursor(self)
     
     def create_connection(*args, **kwargs):
         """ Create a database connection based on arguments.
