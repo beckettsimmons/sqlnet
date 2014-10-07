@@ -56,8 +56,11 @@ class Cursor(object):
         return self.result.fetchall()
 
     def __iter__(self):
-        """ Yield next value in the command result. """
-        yield self.fetchone()
+        """ Yield next value of the command result. """
+        row = self.fetchone()
+        while row != None:
+            yield row
+            row = self.fetchone()
 
     def go(self):
         """ Actually execute/commit cursor command on database. """
