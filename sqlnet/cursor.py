@@ -3,6 +3,7 @@ import clr
 clr.AddReference('System.Data')
 from System.Data.SqlClient import SqlCommand
 
+from utils import use_docstring_from
 from result import Result
 
 class Cursor(object):
@@ -37,21 +38,15 @@ class Cursor(object):
 
         return self
 
+    @use_docstring_from(Result.fetchone)
     def fetchone(self):
-        """ Fetches the next result from last command. """
         return self.result.fetchone()
 
+    @use_docstring_from(Result.fetchmany)
     def fetchmany(self, size=None):
-        """ Fetches number of rows from last command specified by size.
-
-        Args:
-            size (int, optional): Number of rows to fetch.
-                If size exceeds the amount of remaining rows in the
-                result, returns remaining rows.
-                If no size given, default is cursor.array_size.
-        """
         return self.result.fetchmany(size)
 
+    @use_docstring_from(Result.fetchall)
     def fetchall(self):
         return self.result.fetchall()
 

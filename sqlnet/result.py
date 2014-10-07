@@ -25,8 +25,7 @@ class Result():
         return rows
 
     def fetchone(self):
-        """ Return current row from self.rows """
-        
+        """ Fetch next row from the result of the last command. """
         # If no more rows left to fetch, return none.
         if self.row_index + 1 > self.row_count - 1:
             return None
@@ -35,6 +34,14 @@ class Result():
         return self.rows[self.row_index]
 
     def fetchmany(self, size):
+        """ Like fetchone, but fetches the specified number of rows.
+
+        Args:
+            size (int, optional): Number of rows to fetch.
+                If size exceeds the amount of remaining rows in the
+                result, returns remaining rows.
+                If no size given, default is cursor.array_size.
+        """
         rows = []
         for i in range(size):
             row = self.fetchone()
@@ -46,4 +53,5 @@ class Result():
         return rows
 
     def fetchall(self):
+        """ Like fetchmany, but fetches all of the remaining rows. """
         return self.fetchmany(len(self.rows))
